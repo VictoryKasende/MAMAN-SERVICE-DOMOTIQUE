@@ -21,17 +21,15 @@ def envoyer_email(email_destinataire, sujet, message, provenance):
     serveur_mail.starttls()
     serveur_mail.login(configurations.config_email, configurations.config_password)
     serveur_mail.sendmail(configurations.config_email, email_destinataire, multipart_message.as_string())
+    
     serveur_mail.quit()
     
 
-def main():
-    envoyer_email(destination, title, 
-        message_email_html.message_email, provenance=provenance)
+def send_mail(etat_maison):
+    message_html = message_email_html.return_fString_html(etat_maison)
+    envoyer_email(destination, title, message_html, provenance=provenance)
 
 
-if __name__ == "__main__":
-    main()
-    print("Reussi !")
 
      
 

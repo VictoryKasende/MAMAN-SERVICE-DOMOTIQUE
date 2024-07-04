@@ -6,8 +6,9 @@ from src import ThingEsp
 from src import configurations
 from src import emails
 
-thing = ThingEsp.Client()
+thing = ThingEsp.Client('Victory', 'DomotiqueWhats', 'victory2003')
 url = "https://open-ai21.p.rapidapi.com/chatgpt"
+
 
 # Configuration de votre client MQTT
 mqtt_client = mqtt.Client()
@@ -132,11 +133,13 @@ def response_ia(content_user, content_system):
         ],
         "web_access": False
     }
+    
     headers = {
-        "x-rapidapi-key": "ff84360dfbmsh23b57bc2e8d24d7p12a38ejsna0d90550494c",
+        "x-rapidapi-key": "1912b97d24msh6ec09b4efbc569cp14cca6jsnaa2ebad48593",
         "x-rapidapi-host": "open-ai21.p.rapidapi.com",
         "Content-Type": "application/json"
     }
+
     response = requests.post(url, json=payload, headers=headers)
     response_json = response.json()
     if 'status' in response_json and response_json['status']:
@@ -225,8 +228,10 @@ def handleResponse(query):
         mqtt_client.publish(TOPIC_ALARME, "off")
         return response_ia(content_user="l'alarme est eteint", content_system=content_system_ia.content_response)
     elif topic == f"{TOPIC_EMAIL}":
-        emails.main()
-        return response_ia(content_user="l'email du statistique de la maison a ete envoye", content_system=content_system_ia.content_response)
+        message = response_ia(content_user="L'email du statistique de la maison a ete envoye", content_system=content_system_ia.content_response)
+        emails.send_mail(tout_etat)
+        print(tout_etat)
+        return message
     elif topic == f"{TOPIC_TOUT}/on":
         mqtt_client.publish(TOPIC_SALON, "on")
         mqtt_client.publish(TOPIC_CHAMBRE_PARENTS, "on")
