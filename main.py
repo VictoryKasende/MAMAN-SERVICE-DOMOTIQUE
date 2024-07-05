@@ -75,7 +75,8 @@ def on_message(client, userdata, msg):
             etat_maison[attr] = msg.payload.decode()
         print(f"État mis à jour : {attr} = {etat_maison[attr]}")
     else:
-        print(f"Message reçu sur le sujet {msg.topic} : {msg.payload.decode()}")
+        pass
+        #print(f"Message reçu sur le sujet {msg.topic} : {msg.payload.decode()}")
 
 
 def response_ia(content_user, content_system):
@@ -88,7 +89,6 @@ def response_ia(content_user, content_system):
         "web_access": False
     }
 
-    # Préparation des en-têtes requis pour l'API RapidAPI
     headers = {
         "x-rapidapi-key": "1912b97d24msh6ec09b4efbc569cp14cca6jsnaa2ebad48593",
         "x-rapidapi-host": "open-ai21.p.rapidapi.com",
@@ -181,8 +181,8 @@ def handleResponse(query):
         response = ""
         response_map = {
             "salon": "L'état du salon est : {}",
-            "chambre_parents": "L'état de la chambre des parents est : {}",
-            "chambre_enfants": "L'état de la chambre des enfants est : {}",
+            "chambre_de_parents": "L'état de la chambre des parents est : {}",
+            "chambre_des_enfants": "L'état de la chambre des enfants est : {}",
             "couloir": "L'état du couloir est : {}",
             "cuisine": "L'état de la cuisine est : {}",
             "depot": "L'état du dépôt est : {}",
@@ -190,13 +190,14 @@ def handleResponse(query):
             "ventilateur": "L'état du ventilateur est : {}",
             "projecteur": "L'état du projecteur est : {}",
             "alarme": "L'état de l'alarme est : {}",
-            "salon_temperature": "La température du salon est de : {} degrés",
-            "salon_humidite": "L'humidité du salon est de : {}%"
+            "temperature": "La température du salon est de : {} degrés",
+            "humidite": "L'humidité du salon est de : {}%"
         }
 
-        tout_etat = {**etat_maison}
+        tout_etat = etat_maison['tout_etat'] if etat_maison['tout_etat'] else {}
+
         for key, template in response_map.items():
-            if tout_etat.get(key) is not None:
+            if key in tout_etat:
                 response += template.format(tout_etat[key]) + "\n"
             else:
                 response += f"Désolé, je n'ai pas d'informations sur l'état de {key}.\n"
