@@ -25,7 +25,7 @@ def envoyer_email(email_destinataire, sujet, message, provenance):
     serveur_mail.quit()
     
 
-def send_mail(etat_maison):
+def main(etat_maison):
     message_html = message_email_html.return_fString_html(etat_maison)
     envoyer_email(destination, title, message_html, provenance=provenance)
 
